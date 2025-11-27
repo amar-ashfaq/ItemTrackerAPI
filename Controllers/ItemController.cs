@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ItemTrackerAPI.Controllers
@@ -8,10 +9,12 @@ namespace ItemTrackerAPI.Controllers
     public class ItemController : ControllerBase
     {
         private readonly ItemDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ItemController(ItemDbContext context)
+        public ItemController(ItemDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET ALL: api/Items

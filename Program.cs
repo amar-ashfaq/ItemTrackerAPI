@@ -14,6 +14,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ItemDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register AutoMapper
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<ItemProfile>();
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
