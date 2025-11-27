@@ -16,36 +16,66 @@ namespace ItemTrackerAPI.Controllers
 
         // GET ALL: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemEntity>>> GetItems()
+        public async Task<ActionResult<IEnumerable<ItemReadDto>>> GetItems()
         {
             var items = await _context.Items.ToListAsync();
-            return Ok(items);
+
+            var itemsDto = items.Select(item => new ItemReadDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description
+            }).ToList();
+
+            return Ok(itemsDto);
         }
 
         // GET: api/Item/3
         [HttpGet("{id}")]
-        public async Task<ActionResult<ItemEntity>> GetItem(int id) {
+        public async Task<ActionResult<ItemReadDto>> GetItem(int id) {
 
             var item = await _context.Items.FindAsync(id);
 
-            if (item == null) {
+            if (item == null)
+            {
                 return NotFound();
             }
-            return Ok(item);
+
+            var itemDto = new ItemReadDto
+            {
+                Id = item.Id,
+                Name= item.Name,
+                Description = item.Description
+            };
+         
+            return Ok(itemDto);
         }
 
         // POST: api/Item
         [HttpPost]
-        public async Task<IActionResult> CreateItem(ItemEntity item)
+        public async Task<IActionResult> CreateItem(ItemCreateDto itemDto)
         {
-            if (item == null) {
+            if (itemDto == null) {
                return BadRequest();
             }
+
+            var item = new ItemEntity
+            {
+                Name = itemDto.Name,
+                Description = itemDto.Description
+            };
 
             await _context.Items.AddAsync(item);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+            var itemReadDto = new ItemReadDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description
+            };
+
+            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, itemReadDto);
         }
 
         // DELETE: api/Item/5
@@ -82,9 +112,9 @@ namespace ItemTrackerAPI.Controllers
 
         // PUT: api/Item/2
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateItem(int id, ItemEntity item) {
+        public async Task<IActionResult> UpdateItem(int id, ItemCreateDto itemDto) {
 
-            if (id != item.Id)
+            if (itemDto == null)
             {
                 return BadRequest();
             }
@@ -96,8 +126,8 @@ namespace ItemTrackerAPI.Controllers
                 return NotFound();
             }
 
-            existing.Name = item.Name;
-            existing.Description = item.Description;
+            existing.Name = itemDto.Name;
+            existing.Description = itemDto.Description;
 
             await _context.SaveChangesAsync();
 
