@@ -22,14 +22,7 @@ namespace ItemTrackerAPI.Controllers
         public async Task<ActionResult<IEnumerable<ItemReadDto>>> GetItems()
         {
             var items = await _context.Items.ToListAsync();
-
-            var itemsDto = items.Select(item => new ItemReadDto
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description
-            }).ToList();
-
+            var itemsDto = _mapper.Map<List<ItemReadDto>>(items);
             return Ok(itemsDto);
         }
 
@@ -44,12 +37,7 @@ namespace ItemTrackerAPI.Controllers
                 return NotFound();
             }
 
-            var itemDto = new ItemReadDto
-            {
-                Id = item.Id,
-                Name= item.Name,
-                Description = item.Description
-            };
+            var itemDto = _mapper.Map<ItemReadDto>(item);
          
             return Ok(itemDto);
         }
@@ -62,21 +50,12 @@ namespace ItemTrackerAPI.Controllers
                return BadRequest();
             }
 
-            var item = new ItemEntity
-            {
-                Name = itemDto.Name,
-                Description = itemDto.Description
-            };
+            var item = _mapper.Map<ItemEntity>(itemDto);
 
             await _context.Items.AddAsync(item);
             await _context.SaveChangesAsync();
 
-            var itemReadDto = new ItemReadDto
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description
-            };
+            var itemReadDto = _mapper.Map<ItemReadDto>(item);
 
             return CreatedAtAction(nameof(GetItem), new { id = item.Id }, itemReadDto);
         }
@@ -129,8 +108,7 @@ namespace ItemTrackerAPI.Controllers
                 return NotFound();
             }
 
-            existing.Name = itemDto.Name;
-            existing.Description = itemDto.Description;
+            _mapper.Map(itemDto, existing);
 
             await _context.SaveChangesAsync();
 
