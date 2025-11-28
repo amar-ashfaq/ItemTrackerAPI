@@ -1,8 +1,7 @@
-﻿namespace ItemTrackerAPI
+﻿namespace ItemTrackerAPI.DTOs
 {
-    public class ItemReadDto
+    public class ItemCreateDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

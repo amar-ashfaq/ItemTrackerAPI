@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ItemTrackerAPI.DTOs;
+using ItemTrackerAPI.Entities;
 
 namespace ItemTrackerAPI
 {

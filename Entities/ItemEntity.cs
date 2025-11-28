@@ -1,4 +1,4 @@
-﻿namespace ItemTrackerAPI
+﻿namespace ItemTrackerAPI.Entities
 {
     public class ItemEntity
     {

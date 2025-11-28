@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ItemTrackerAPI.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ItemTrackerAPI
 {
