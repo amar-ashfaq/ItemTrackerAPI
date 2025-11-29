@@ -22,6 +22,16 @@ builder.Services.AddAutoMapper(cfg =>
 
 var app = builder.Build();
 
+// global exception handling middleware to catch internal server errors
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync("An unexpected error occured.");
+    });
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
